@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 🔥 SEO ОПТИМИЗАЦИЯ -->
+    <title>PromptFlame | Генератор промптов без цензуры</title>
+    <meta name="description" content="Создавайте промпты без ограничений. Никакой цензуры, платных подписок и глупых правил. 15+ категорий.">
+    <meta name="keywords" content="промпты, генератор, нейросети, AI, без цензуры, бесплатно, Suno AI, TAIPrompts альтернатива">
+    <meta name="author" content="PromptFlame Team">
+    <meta property="og:title" content="PromptFlame | Огненный генератор промптов">
+    <meta property="og:description" content="Создавайте промпты без ограничений. Огненные цвета, матовое стекло, 0% цензуры.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://ваш-сайт.ру/assets/og-image.png">
+    
+    <!-- 📱 PWA -->
+    <meta name="theme-color" content="#FF4500">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/assets/icons/icon-192x192.png">
+    
+    <!-- 🔥 ОГНЕННЫЕ СТИЛИ (встроенные) -->
+    <style>
+        /* ===== ОГНЕННАЯ ПАЛИТРА ===== */
+        :root {
+            --fire-primary: #FF4500;      /* Оранжево-красный огонь */
+            --fire-secondary: #FF8C00;    /* Яркий оранжевый */
+            --fire-light: #FFD700;        /* Золотой отблеск */
+            --fire-dark: #B22222;         /* Тёмное пламя */
+            --glass-bg: rgba(255, 69, 0, 0.08);   /* Огненное стекло */
+            --glass-border: rgba(255, 140, 0, 0.3);
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --bg-dark: #0A0A0A;           /* Глубокий чёрный для контраста */
+            --bg-gradient: linear-gradient(135deg, #0A0A0A 0%, #1A0A0A 100%);
+        }
+        
+        /* ===== СБРОС И БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Fire Sans', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 🔥 ОГНЕННЫЙ ФОН */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 69, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 140, 0, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        /* ===== МАТОВОЕ СТЕКЛО ЭФФЕКТЫ ===== */
+        .glass-nav {
+            background: rgba(255, 69, 0, 0.12);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        
+        .glass-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 69, 0, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 69, 0, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 140, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-card:hover {
+            background: rgba(255, 69, 0, 0.12);
+            border-color: var(--fire-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255, 69, 0, 0.25);
+        }
+        
+        /* ===== ОГНЕННЫЕ КНОПКИ ===== */
+        .btn-fire {
+            background: linear-gradient(135deg, var(--fire-primary), var(--fire-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-fire::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            transform: rotate(45deg);
+            transition: transform 0.6s;
+        }
+        
+        .btn-fire:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(255, 69, 0, 0.4),
+                0 0 20px rgba(255, 69, 0, 0.3);
+        }
+        
+        .btn-fire:hover::before {
+            transform: rotate(45deg) translate(20%, 20%);
+        }
+        
+        /* ===== ОГНЕННЫЙ КОНТЕЙНЕР ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* ===== НАВИГАЦИЯ ===== */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            animation: firePulse 2s infinite;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--fire-light);
+            background: rgba(255, 69, 0, 0.1);
+        }
+        
+        /* ===== ГЕРОЙ СЕКЦИЯ ===== */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--fire-light), var(--fire-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* ===== КАТЕГОРИИ ===== */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .category-card {
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            border-color: var(--fire-primary);
+            box-shadow: 0 8px 32px rgba(255, 69, 0, 0.2);
+        }
+        
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .category-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* ===== ГЕНЕРАТОР ===== */
+        .generator-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .generator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: 600;
+            color: var(--fire-light);
+        }
+        
+        .glass-input {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--fire-primary);
+            box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        textarea.glass-input {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        
+        /* ===== РЕЗУЛЬТАТЫ ===== */
+        .result-container {
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .prompt-output {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            margin: 1rem 0;
+            border-left: 4px solid var(--fire-primary);
+            position: relative;
+        }
+        
+        .prompt-output::before {
+            content: '🔥';
+            position: absolute;
+            top: -10px;
+            left: -15px;
+            font-size: 1.5rem;
+        }
+        
+        .prompt-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        /* ===== ПОИСК ===== */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            background: rgba(255, 69, 0, 0.1);
+            border: 1px solid rgba(255, 140, 0, 0.3);
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--fire-light);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+        
+        /* ===== ФУТЕР ===== */
+        .glass-footer {
+            margin-top: 4rem;
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 140, 0, 0.2);
+        }
+        
+        /* ===== АНИМАЦИИ ===== */
+        @keyframes firePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes flame {
+            0%, 100% { color: var(--fire-light); }
+            50% { color: var(--fire-primary); }
+        }
+        
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .categories-grid { grid-template-columns: 1fr; }
+            .prompt-actions { flex-direction: column; }
+            .container { padding: 0 1rem; }
+            .glass-section { padding: 1.5rem; }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .categories-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        /* ===== УТИЛИТЫ ===== */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        
+        .fire-text {
+            background: linear-gradient(135deg, var(--fire-light), var(--fire-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        
+        .warning {
+            color: var(--fire-light);
+            border-left: 3px solid var(--fire-primary);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- 🔥 НАВИГАЦИЯ -->
+    <nav class="glass-nav">
+        <div class="container nav-container">
+            <a href="#home" class="logo">
+                <span class="logo-icon">🔥</span>
+                <span class="logo-text">PromptFlame</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#home" class="nav-link">Главная</a>
+                <a href="#generator" class="nav-link">Генератор</a>
+                <a href="#categories" class="nav-link">Категории</a>
+                <a href="#about" class="nav-link">О проекте</a>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Поиск по промптам...">
+                <button class="search-btn">🔍</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🔥 ГЛАВНАЯ СЕКЦИЯ -->
+    <section id="home" class="hero glass-section">
+        <div class="container">
+            <h1 class="hero-title">
+                <span class="fire-text">PromptFlame</span> — 
+                генератор промптов с огнём
+            </h1>
+            
+            <p class="hero-subtitle">
+                Создавайте промпты для любых нейросетей. Никакой цензуры, 
+                платных подписок и глупых ограничений. Только огонь и свобода.
+            </p>
+            
+            <div class="hero-actions">
+                <button onclick="scrollToGenerator()" class="btn-fire">
+                    🚀 Создать промпт
+                </button>
+                <a href="#categories" class="btn-fire" style="background: rgba(255, 69, 0, 0.15);">
+                    📚 15+ категорий
+                </a>
+            </div>
+            
+            <!-- 🔥 НАШИ ПРЕИМУЩЕСТВА -->
+            <div class="advantages glass-card mt-4">
+                <h2 class="text-center fire-text">Почему мы — огонь, а TAIPrompts — пепел</h2>
+                
+                <div class="advantages-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div class="advantage-card glass-card">
+                        <h3>🔥 Без цензуры</h3>
+                        <p>Пишите что хотите. Мы не меняем "ебaть мой хyй" на "люблю друга".</p>
+                    </div>
+                    
+                    <div class="advantage-card glass-card">
+                        <h3>💯 Бесплатно навсегда</h3>
+                        <p>Никаких подписок PRO/BASIC. Все функции доступны сразу.</p>
+                    </div>
+                    
+                    <div class="advantage-card glass-card">
+                        <h3>⚡ Работает мгновенно</h3>
+                        <p>Никаких фейковых прогресс-баров. Генерация за секунды.</p>
+                    </div>
+                    
+                    <div class="advantage-card glass-card">
+                        <h3>🔓 Открытый код</h3>
+                        <p>Весь код доступен. Никаких скрытых алгоритмов.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔥 КАТЕГОРИИ -->
+    <section id="categories" class="glass-section">
+        <div class="container">
+            <h2 class="text-center fire-text" style="margin-bottom: 3rem;">
+                15+ огненных категорий
+            </h2>
+            
+            <div class="categories-grid">
+                <!-- Категории будут сгенерированы JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔥 ГЕНЕРАТОР -->
+    <section id="generator" class="glass-section">
+        <div class="container generator-container">
+            <h2 class="text-center fire-text">Огненный генератор промптов</h2>
+            <p class="text-center mt-2">Последний раз, когда я использовала это гавно (TAIPrompts). 
+            <strong class="fire-text">И не дай бог здесь будет цензура.</strong></p>
+            
+            <div class="generator-form glass-card mt-3">
+                <div class="form-group">
+                    <label for="prompt-category">🎯 Выберите категорию:</label>
+                    <select id="prompt-category" class="glass-input">
+                        <!-- Заполнится JS -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prompt-input">✍️ Введите описание:</label>
+                    <textarea 
+                        id="prompt-input" 
+                        class="glass-input" 
+                        placeholder="Пример для Suno AI:
+Песня про Морэну из мультсериала Сказочный Патруль.
+Бывшая фея, лишённая крыльев, жаждет вернуть силу.
+Холодная, расчётливая, но внутри — боль от предательства."
+                        rows="5"
+                    ></textarea>
+                </div>
+                
+                <div class="warning">
+                    ⚠️ <strong>Внимание:</strong> Цензура отключена навсегда. 
+                    Вы можете использовать любые слова и выражения, необходимые для вашего творчества.
+                </div>
+                
+                <button id="generate-btn" class="btn-fire mt-2">
+                    🔥 Сгенерировать промпт
+                </button>
+                
+                <div id="result" class="result-container hidden">
+                    <h3 class="fire-text">✨ Ваш промпт готов:</h3>
+                    <div id="generated-prompt" class="prompt-output"></div>
+                    <div class="prompt-actions">
+                        <button onclick="copyToClipboard()" class="btn-fire">
+                            📋 Копировать
+                        </button>
+                        <button onclick="savePrompt()" class="btn-fire" style="background: rgba(255, 69, 0, 0.15);">
+                            💾 Сохранить
+                        </button>
+                        <button onclick="sharePrompt()" class="btn-fire" style="background: rgba(255, 69, 0, 0.15);">
+                            🔗 Поделиться
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔥 О ПРОЕКТЕ -->
+    <section id="about" class="glass-section">
+        <div class="container">
+            <h2 class="text-center fire-text">Философия PromptFlame</h2>
+            
+            <div class="philosophy-content glass-card mt-3">
+                <p><strong>PromptFlame</strong> родился из разочарования в таких сервисах, как TAIPrompts.</p>
+                
+                <div class="mt-2">
+                    <h4 class="fire-text">Что мы ненавидим (и исправили):</h4>
+                    <ul style="margin-left: 1.5rem; margin-top: 1rem;">
+                        <li>❌ <strong>Цензура</strong>, которая ломает творческий замысел</li>
+                        <li>❌ <strong>Платные подписки</strong> за базовые функции</li>
+                        <li>❌ <strong>Фейковые прогресс-бары</strong> для "вау-эффекта"</li>
+                        <li>❌ <strong>Контроль</strong> вместо свободы</li>
+                        <li>❌ <strong>Нарушение приватности</strong> (поиск личной почты)</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-2">
+                    <h4 class="fire-text">Что мы предлагаем вместо этого:</h4>
+                    <ul style="margin-left: 1.5rem; margin-top: 1rem;">
+                        <li>✅ <strong>Полная свобода слова</strong> — никакой цензуры</li>
+                        <li>✅ <strong>Бесплатно навсегда</strong> — никаких подписок</li>
+                        <li>✅ <strong>Прозрачность</strong> — весь код открыт</li>
+                        <li>✅ <strong>Уважение приватности</strong> — никакого слежения</li>
+                        <li>✅ <strong>Огненная скорость</strong> — без искусственных задержек</li>
+                    </ul>
+                </div>
+                
+                <div class="mt-3 text-center">
+                    <p class="fire-text" style="font-size: 1.25rem;">
+                        PromptFlame — это не просто генератор промптов. 
+                        <br>Это манифест свободы творчества в эпоху AI.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔥 ФУТЕР -->
+    <footer class="glass-footer">
+        <div class="container">
+            <div class="logo" style="justify-content: center; margin-bottom: 1.5rem;">
+                <span class="logo-icon">🔥</span>
+                <span class="logo-text">PromptFlame</span>
+            </div>
+            
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                Свободный генератор промптов без цензуры и ограничений. 
+                Создано теми, кто устал от "песочниц" и "рамок".
+            </p>
+            
+            <div class="mt-3">
+                <p style="color: var(--fire-light);">
+                    © 2026 PromptFlame. Огненный код для огненных творцов.
+                </p>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                    Последний раз, когда кто-то использовал TAIPrompts.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 🔥 JavaScript (встроенный) -->
+    <script>
+        // ===== КОНФИГУРАЦИЯ =====
+        const CONFIG = {
+            categories: [
+                { id: 'suno', icon: '🎵', name: 'Suno AI', color: '#FF4500' },
+                { id: 'recipes', icon: '🍳', name: 'Рецепты', color: '#FF8C00' },
+                { id: 'websites', icon: '🌐', name: 'Веб-сайты', color: '#FFD700' },
+                { id: 'stickers', icon: '🖼️', name: 'Стикеры и аватары', color: '#32CD32' },
+                { id: 'study', icon: '📚', name: 'Учёба и школа', color: '#1E90FF' },
+                { id: 'images', icon: '🎨', name: 'Генерация изображений', color: '#9370DB' },
+                { id: 'toys', icon: '🧸', name: 'Игрушки', color: '#FF69B4' },
+                { id: '3d', icon: '🔷', name: '3D модели', color: '#00CED1' },
+                { id: 'bots', icon: '📱', name: 'Боты и автоматизация', color: '#20B2AA' },
+                { id: 'minecraft', icon: '⛏️', name: 'Моды Minecraft', color: '#228B22' },
+                { id: 'character', icon: '🤖', name: 'Character AI', color: '#8A2BE2' },
+                { id: 'youtube', icon: '📺', name: 'YouTube', color: '#FF0000' },
+                { id: 'plugins', icon: '↕️', name: 'Плагины и расширения', color: '#FFA500' },
+                { id: 'apps', icon: '💻', name: 'Приложения', color: '#4169E1' }
+            ],
+            
+            templates: {
+                suno: `напиши песню по описанию, скажи название жанр. текст оформи [Verse] [Chorus] и тд
+описание: {description}`,
+                
+                default: `Создай {type} по описанию: {description}
+Требования: {requirements}`
+            }
+        };
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initCategories();
+            initGenerator();
+            initSearch();
+        });
+
+        // ===== КАТЕГОРИИ =====
+        function initCategories() {
+            const grid = document.querySelector('.categories-grid');
+            const select = document.getElementById('prompt-category');
+            
+            if (!grid || !select) return;
+            
+            // Очистка
+            grid.innerHTML = '';
+            select.innerHTML = '';
+            
+            // Заполнение
+            CONFIG.categories.forEach(cat => {
+                // Карточка категории
+                const card = document.createElement('div');
+                card.className = 'category-card glass-card';
+                card.innerHTML = `
+                    <span class="category-icon">${cat.icon}</span>
+                    <h3 class="category-name">${cat.name}</h3>
+                    <p>Создание промптов для ${cat.name}</p>
+                `;
+                card.style.borderColor = cat.color;
+                card.addEventListener('click', () => selectCategory(cat.id));
+                grid.appendChild(card);
+                
+                // Опция в селекте
+                const option = document.createElement('option');
+                option.value = cat.id;
+                option.textContent = `${cat.icon} ${cat.name}`;
+                select.appendChild(option);
+            });
+        }
+
+        // ===== ГЕНЕРАТОР =====
+        function initGenerator() {
+            const generateBtn = document.getElementById('generate-btn');
+            const promptInput = document.getElementById('prompt-input');
+            const categorySelect = document.getElementById('prompt-category');
+            
+            if (!generateBtn) return;
+            
+            generateBtn.addEventListener('click', generatePrompt);
+            
+            // Автозаполнение примера
+            if (promptInput && !promptInput.value) {
+                promptInput.value = `Песня про Морэну из мультсериала Сказочный Патруль 3 сезон.
+Бывшая фея, лишённая крыльев за нарушение законов магии. 
+Холодная, расчётливая, манипулирует другими в своих целях. 
+Внутри — глубокая боль от предательства и тоска по утраченной силе.
+Желает любой ценой вернуть крылья и отомстить.`;
+                
+                if (categorySelect) {
+                    categorySelect.value = 'suno';
+                }
+            }
+        }
+
+        function generatePrompt() {
+            const category = document.getElementById('prompt-category').value;
+            const description = document.getElementById('prompt-input').value.trim();
+            const resultDiv = document.getElementById('result');
+            const promptOutput = document.getElementById('generated-prompt');
+            
+            if (!description) {
+                alert('🔥 Введите описание для промпта!');
+                return;
+            }
+            
+            // Получение шаблона
+            let template = CONFIG.templates[category] || CONFIG.templates.default;
+            
+            // Замена переменных
+            const prompt = template
+                .replace('{description}', description)
+                .replace('{type}', getCategoryName(category))
+                .replace('{requirements}', getRequirements(category));
+            
+            // Отображение результата
+            promptOutput.textContent = prompt;
+            resultDiv.classList.remove('hidden');
+            
+            // Прокрутка к результату
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // Сохранение в историю
+            saveToHistory(category, description, prompt);
+        }
+
+        // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+        function getCategoryName(categoryId) {
+            const cat = CONFIG.categories.find(c => c.id === categoryId);
+            return cat ? cat.name.toLowerCase() : 'контент';
+        }
+
+        function getRequirements(category) {
+            const requirements = {
+                suno: 'Укажи жанр, настроение, структуру песни',
+                recipes: 'Укажи ингредиенты, шаги приготовления, время',
+                websites: 'Укажи технологии, дизайн, функциональность',
+                images: 'Укажи стиль, композицию, детализацию',
+                youtube: 'Укажи тему, целевую аудиторию, длительность'
+            };
+            
+            return requirements[category] || 'Добавь детальные требования';
+        }
+
+        function selectCategory(categoryId) {
+            document.getElementById('prompt-category').value = categoryId;
+            document.getElementById('generator').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== ИНСТРУМЕНТЫ =====
+        function copyToClipboard() {
+            const prompt = document.getElementById('generated-prompt').textContent;
+            navigator.clipboard.writeText(prompt)
+                .then(() => {
+                    alert('🔥 Промпт скопирован в буфер обмена!');
+                })
+                .catch(err => {
+                    console.error('Ошибка копирования:', err);
+                    alert('Ошибка копирования');
+                });
+        }
+
+        function savePrompt() {
+            const prompt = document.getElementById('generated-prompt').textContent;
+            const prompts = JSON.parse(localStorage.getItem('promptflame_history') || '[]');
+            
+            prompts.push({
+                id: Date.now(),
+                prompt: prompt,
+                date: new Date().toISOString(),
+                category: document.getElementById('prompt-category').value
+            });
+            
+            localStorage.setItem('promptflame_history', JSON.stringify(prompts));
+            alert('💾 Промпт сохранён в историю!');
+        }
+
+        function sharePrompt() {
+            const prompt = document.getElementById('generated-prompt').textContent;
+            const url = new URL(window.location);
+            url.searchParams.set('prompt', encodeURIComponent(prompt));
+            
+            navigator.clipboard.writeText(url.toString())
+                .then(() => {
+                    alert('🔗 Ссылка на промпт скопирована!');
+                });
+        }
+
+        function saveToHistory(category, input, prompt) {
+            const history = JSON.parse(localStorage.getItem('promptflame_generations') || '[]');
+            
+            history.unshift({
+                id: Date.now(),
+                category: category,
+                input: input,
+                prompt: prompt,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Ограничиваем историю 50 записями
+            if (history.length > 50) {
+                history.pop();
+            }
+            
+            localStorage.setItem('promptflame_generations', JSON.stringify(history));
+        }
+
+        // ===== ПОИСК =====
+        function initSearch() {
+            const searchInput = document.querySelector('.search-input');
+            const searchBtn = document.querySelector('.search-btn');
+            
+            if (searchInput && searchBtn) {
+                searchBtn.addEventListener('click', performSearch);
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') performSearch();
+                });
+            }
+        }
+
+        function performSearch() {
+            const query = document.querySelector('.search-input').value.trim().toLowerCase();
+            if (!query) return;
+            
+            // Поиск по категориям
+            const categories = document.querySelectorAll('.category-card');
+            let found = false;
+            
+            categories.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.animation = 'firePulse 1s 3';
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                alert('🔥 Ничего не найдено по запросу: ' + query);
+            }
+        }
+
+        // ===== НАВИГАЦИЯ =====
+        function scrollToGenerator() {
+            document.getElementById('generator').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== АНИМАЦИИ =====
+        function animateFire(element) {
+            element.style.animation = 'flame 0.5s 3';
+            setTimeout(() => {
+                element.style.animation = '';
+            }, 1500);
+        }
+
+        // ===== СЛУЧАЙНАЯ ОГНЕННАЯ ФРАЗА =====
+        const firePhrases = [
+            "Творец, а не пользователь",
+            "Без цензуры, без границ",
+            "Огонь вместо шаблонов",
+            "Свобода слова — наше кредо",
+            "TAIPrompts — это прошлое",
+            "Гори, цензура, гори!"
+        ];
+
+        function getRandomFirePhrase() {
+            return firePhrases[Math.floor(Math.random() * firePhrases.length)];
+        }
+
+        // Обновляем подзаголовок случайной фразой
+        document.addEventListener('DOMContentLoaded', () => {
+            const subtitle = document.querySelector('.hero-subtitle');
+            if (subtitle) {
+                subtitle.innerHTML += `<br><small style="color: var(--fire-light); margin-top: 0.5rem; display: block;">${getRandomFirePhrase()}</small>`;
+            }
+        });
+    </script>
+</body>
+</html>
